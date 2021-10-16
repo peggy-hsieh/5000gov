@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="zh-Hant" class="no-js">
+
+<head>
+	<meta charset="UTF-8">
+	<link rel="alternate" hreflang="x-default" href="index.html" />
+	<link rel="alternate" hreflang="zh" href="index.html" />
+	<link rel="alternate" hreflang="zh-TW" href="index.html" />
+	<meta name="description" content="" />
+	<meta name="keywords" content="" />
+	<meta name="viewport"
+		content="initial-scale=1, width=device-width, maximum-scale=1, minimum-scale=1, user-scalable=no">
+	<meta name="mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<title>振興五倍加碼券快速查詢</title>
+	<meta property="og:url" content="index.html" />
+	<meta property="og:type" content="website" />
+	<meta property="og:title" content="振興五倍加碼券快速查詢" />
+	<meta property="og:description" content="振興五倍加碼券快速查詢" />
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+		integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+	<style>
+		.wrapper {
+			padding-top: 80px;
+		}
+
+		.container {
+			max-width: 800px;
+		}
+
+		h1 {
+			margin-bottom: 20px;
+		}
+
+		.btn-check:focus+.btn,
+		.btn:focus,
+		.btn-check:active+.btn-primary:focus,
+		.btn-check:checked+.btn-primary:focus,
+		.btn-primary.active:focus,
+		.btn-primary:active:focus,
+		.show>.btn-primary.dropdown-toggle:focus,
+		.btn-check:focus+.btn-primary,
+		.btn-primary:focus,
+		.form-control:focus {
+			outline: 0;
+			box-shadow: 0 0 0 0rem rgb(13 110 253 / 25%);
+		}
+
+		.title {
+			font-weight: bold;
+			font-size: 26px;
+			border-bottom: solid 1px rgba(0, 0, 0, 0.3);
+
+		}
+		.no {
+			display: inline-block;
+			padding: 2px 10px;
+			border: solid 1px rgba(0, 0, 0, 0.3);
+			margin-bottom: 5px;
+			margin-top: 15px;
+		}
+
+		.tr {
+			display: flex;
+			margin-bottom: 5px;
+			padding-left: 20px;
+			position: relative;
+			flex-wrap: wrap;
+		}
+
+		.tr:before {
+			content: '';
+			width: 5px;
+			height: 5px;
+			background: #0a58ca;
+			border-radius: 50%;
+			position: absolute;
+			left: 5px;
+			top: 10px;
+
+		}
+
+		.key {
+			margin-right: 4px;
+		}
+
+		.badge {
+			line-height: 16px;
+			margin-right: 2px;
+			margin-bottom: 5px;
+		}
+		
+		#danger {
+			margin: 0
+		}
+
+		#danger.show {
+			margin-bottom: 20px;
+			margin-top: 20px;
+		}
+
+		.fade {
+			height: 0;
+		}
+
+		.fade.show {
+			height: auto;
+		}
+
+		@media screen and (max-width: 1000px) {
+			.wrapper {
+				padding-top: 50px;
+			}
+
+			.key {
+				width: 100%;
+			}
+
+		}
+	</style>
+</head>
+
+<body itemscope="itemscope" itemtype="https://schema.org/WebPage">
+	<div class="wrapper">
+		<div class="content">
+			<div class="container">
+				<h1 class="text-center" itemprop="headline">振興五倍加碼券快速查詢</h1>
+				<div id="danger" class=" mt-3 alert alert-danger alert-dismissible fade" style="">
+					輸入身分證或格式錯誤(請填寫身分證 或 至少末3碼 / 用 , 分開多筆)
+				</div>
+				<div class="input-group">
+					<input type="text" class="form-control" placeholder="請填寫身分證 或 至少末3碼 / 用 , 分開多筆"
+						aria-label="請填寫身分證 或 至少末3碼" id="value">
+					<div class="input-group-append">
+						<button class="btn btn-primary" type="button" id="send">查詢</button>
+					</div>
+				</div>
+				<div id="result" class=" mt-3 alert alert-info alert-dismissible fade"></div>
+				<div id="result2" class=" mt-3 alert alert-success alert-dismissible"></div>
+				<p class="text-gray text-center ">
+					<a href="https://5000.gov.tw/" target="_blank" alt="振興五倍券官網" title="振興五倍券官網">振興五倍券官網</a><br>
+					無廣告、無追蹤碼、無暫存
+				</p>
+			</div>
+		</div>
+		<footer class="site-footer" role="contentinfo" itemscope="itemscope" itemtype="https://schema.org/WPFooter">
+			<div class="container text-center">
+				<div class="copyright" itemprop="copyrightHolder">Copyright © 2021 <span class="author"
+						itemprop="author">PeggyHsieh</span></div>
+				<br /><br />
+			</div>
+		</footer>
+	</div>
+	<script src="https://code.jquery.com/jquery-2.2.4.min.js"
+		integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
+	<script>
+		$(function () {
+			var OutData//存加倍券中獎單
+			var Key = {//加倍券名稱定義
+				domesticTravel: '國旅券',
+				iYuan: 'i原券',
+				agriculture: '農遊券',
+				artFunE: '藝Fun券(數位)',
+				artFunP: '藝Fun券(紙本)',
+				sports: '動滋券2.0',
+				hakka: '客庄券',
+				rgionalRevitalization: '地方創生券',
+			}
+			var No = {//中獎梯次定義
+				no1: '梯次1',
+				no2: '梯次2',
+				no3: '梯次3',
+				no4: '梯次4',
+			}
+			refreshData()//執行
+			// 執行
+			function refreshData() {
+				return new Promise((resolve, reject) => {
+					// 取得資料
+					GetData().then(data => {
+						try {
+							data = JSON.parse(data);
+							OutData = data//存加倍券中獎單
+							renderData()//渲染名單
+						} catch (e) {
+							alert(e)
+						}
+						resolve(data)
+					}).catch(err => {
+						reject(err)
+					})
+				})
+			}
+			//不快取
+			$(document).ready(function () {
+				$.ajaxSetup({ cache: false });
+			});
+			//渲染名單
+			function renderData() {
+				let html = '<div class="title">所有中籤號碼</div>'
+				$.each(OutData, function (index, value) {
+					if (!isEmptyObject(value)) {
+						html += `<div class="no">${No[index]}</div><div class="clearfix"></div>`
+						$.each(value, function (index2, value2) {
+							html += `<div class="tr">
+							    	<div class="key">${Key[index2]}</div>
+							    	${getNum(value2)}
+							    	
+							    </div>`
+						});
+					}
+				});
+				$('#result2').html(html).addClass('show')
+			}
+			//所有號碼
+			function getNum(data) {
+				let text = ''
+				$.map(data, function (val, i) {
+					text += `<div class="num badge  badge-xs bg-success">${val}</div>`;
+				});
+				return text
+			}
+			//取得資料
+			function GetData() {
+				let DataJson = `https://raw.githubusercontent.com/Bgihe/5000gov/master/winNumber.json`
+				return new Promise((resolve, reject) => {
+					var jqxhr = $.getJSON(`${DataJson}`, function (data) {
+					})
+					jqxhr.complete(function (data) {
+						resolve(data.responseText)
+					});
+				})
+			}
+			//判斷object是否為空
+			function isEmptyObject(obj) {
+				for (var key in obj) {
+					return false;
+				}
+				return true;
+			}
+			//送出查詢
+			$(document).on('click', '#send', function (event) {
+				let Id = $('#value').val()
+				if (Id == '' || Id.length < 3) {
+					$('#danger').addClass('show')
+				} else {
+					$('#danger').removeClass('show')
+					arr = Id.split(',');//注split可以用字元或字串分割
+					let html = '<div class="title">查詢結果</div>'
+					let format = true
+					$.each(arr, function (indexId, valueId) {
+						if (valueId == '' || valueId.length < 3) {
+							format = false
+						}
+						else {
+							$('#danger').removeClass('show')
+							let two = valueId.slice(-2)//取後2碼
+							let three = valueId.slice(-3)//取後3碼
+							$.each(OutData, function (index, value) {
+								let num = false
+								if (!isEmptyObject(value)) {
+									html += `<div class="no">${No[index]}</div> - <b>${valueId}</b><div class="clearfix"></div>`
+									$.each(value, function (index2, value2) {
+										if (value2.includes(two)) {
+											num = true
+											html += `<div class="tr">
+										    	<div class="key">${Key[index2]}</div>
+										    	<div class="num badge  badge-xs bg-primary">${two}</div>
+										    </div>`
+										}
+										if (value2.includes(three)) {
+											num = true
+											html += `<div class="tr">
+										    	<div class="key">${Key[index2]}</div>
+										    	<div class="num badge badge-xs bg-primary">${three}</div>
+										    </div>`
+										}
+									});
+									if (!num) {
+										html += `<p>未中獎</p>`
+									}
+								}
+							});
+						}
+						if (!format) {
+							$('#danger').addClass('show')
+						} else {
+							$('#danger').removeClass('show')
+						}
+					});
+					$('#result').html(html).addClass('show')
+				}
+			});
+		});
+
+	</script>
+</body>
+
+</html>
