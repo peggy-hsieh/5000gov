@@ -89,7 +89,7 @@
 						<li><button class="btn mail" onclick="shareToGmail()" title="分享至Gmail"><i class="ic icon-ic-share-mail"></i></button></li>
 					</ul>
 				</div>
-				<div id="danger" class=" mt-3 alert alert-danger alert-dismissible fade" style="">
+				<div id="danger" class=" mt-3 alert alert-danger fade" style="">
 					輸入身分證或格式錯誤(請填寫身分證 或 至少末3碼 / 用 , 分開多筆)
 				</div>
 				<div class="input-group">
@@ -99,31 +99,36 @@
 						<button class="btn btn-primary" type="button" id="send">查詢</button>
 					</div>
 				</div>
-				<div id="result" class=" mt-3 alert alert-info alert-dismissible fade"></div>
+				<div id="result" class=" mt-3 alert alert-info fade"></div>
 				<p class="text-center download_box">
 					<button class="btn btn-primary" id="download">下載查詢結果</button>
 					<button class="btn btn-primary" id="download2">碼掉身分證</button>
 				</p>
-				<div id="result2" class=" mt-3 alert alert-success alert-dismissible"></div>
+				<div id="result2" class=" mt-3 alert alert-info"></div>
+				<div id="result3" class=" mt-3 alert alert-danger"></div>
 				<div class="fb-comments" data-href="https://coin028.com/5000gov/index.html" data-width="100%" data-numposts="8"></div>
-				<p class="text-gray text-center ">
-					<a href="https://5000.gov.tw/" class="text-success" target="_blank" alt="振興五倍券官網"
-						title="振興五倍券官網">振興五倍券官網</a> /
-					<a href="https://github.com/peggy-hsieh/5000gov" class="text-success" target="_blank" alt="振興五倍券官網"
-						title="振興五倍券官網">開放原碼Github</a><br>
-					無廣告、無暫存
-				</p>
+				
 
 			</div>
 		</div>
-		<footer class="site-footer" role="contentinfo" itemscope="itemscope" itemtype="https://schema.org/WPFooter">
-			<div class="container text-center">
-				<div class="copyright" itemprop="copyrightHolder">Copyright © 2021 <span class="author"
-						itemprop="author">PeggyHsieh</span></div>
-				<br /><br />
-			</div>
-		</footer>
 	</div>
+	<footer class="site-footer" role="contentinfo" itemscope="itemscope" itemtype="https://schema.org/WPFooter">
+		<div class="container text-center">
+			<p class="text-gray text-center ">
+				<a href="https://5000.gov.tw/" rel="noopener noreferrer " target="_blank" alt="振興五倍券官網"
+					title="振興五倍券官網">振興五倍券官網</a> / 
+				<a href="https://ws.5000.gov.tw/001/Upload/406/relfile/0/302/5be65b79-d551-410e-a5d7-124305c88ce0.pdf" rel="noopener noreferrer " target="_blank" alt="兌付要點"
+					title="兌付要點">兌付要點</a> / 
+				<a href="https://ws.5000.gov.tw/001/Upload/406/relfile/0/301/40502a0f-8b7b-43aa-b29f-b24c665b5d7c.pdf" rel="noopener noreferrer " target="_blank" alt="發放辦法"
+					title="發放辦法">發放辦法</a> / 
+				<a href="https://github.com/peggy-hsieh/5000gov" rel="noopener noreferrer " target="_blank" alt="振興五倍券官網"
+					title="振興五倍券官網">開放原碼Github</a><br>
+				本網站非官方，不會儲存任何身份證相關個資
+			</p>
+			<div class="copyright" itemprop="copyrightHolder">Copyright © 2021 <span class="author"
+					itemprop="author">PeggyHsieh</span></div>
+		</div>
+	</footer>
 	<script src="https://code.jquery.com/jquery-2.2.4.min.js"
 		integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.5.0-beta4/html2canvas.min.js"
@@ -144,11 +149,13 @@
 				rgionalRevitalization: '地方創生券',
 			}
 			var No = {//中獎梯次定義
-				no1: '梯次1',
-				no2: '梯次2',
-				no3: '梯次3',
-				no4: '梯次4',
+				no1: '<span>1</span>第一週',
+				no2: '<span>2</span>第二週',
+				no3: '<span>3</span>第三週',
+				no4: '<span>4</span>第四週',
 			}
+			var all={}
+			var count=[]
 			refreshData()//執行
 			// 執行
 			function refreshData() {
@@ -187,13 +194,55 @@
 						});
 					}
 				});
+				$.each(all, function (index, value) {
+					if(index.length==3){
+						let two = index.slice(-2)//取後2碼
+						if(count.includes(two)){
+							all[index] =all[index] + all[two] 
+						}
+					}
+				});
+				var sortable = [];
+				for (var vehicle in all) {
+					sortable.push([vehicle, all[vehicle]]);
+				}
+
+				sortable.sort(function(a, b) {
+					return b[1] -a[1] ;
+				});
+				var sortHtml= ''
+				var big 
+				$.each(sortable, function (index, value) {
+					if(index== 0){
+						big = value[1]-2
+					}
+
+					if(value[1]> big){
+						sortHtml +=`<div class="tr_box"><div class="td">${value[0]}</div><div class="td">${value[1]}</div></div>`
+					}
+				});
+
 				$('#result2').html(html).addClass('show')
+				$('#result3').html(`
+					<div id="toggle">
+						<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="#ffffff"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"/></svg>
+					</div>
+					<div class="title">仇恨值排名</div>
+					<div class="tr_box"><div class="td">號碼</div><div class="td">次數</div></div>
+					<div class="table_box">${sortHtml}</div>
+				`).addClass('show')
 			}
 			//所有號碼
 			function getNum(data) {
 				let text = ''
 				$.map(data, function (val, i) {
-					text += `<div class="num badge  badge-xs bg-success">${val}</div>`;
+					text += `<div class="num badge">${val}</div>`;
+					if(all[val]){
+						all[val] = all[val]+1
+					}else{
+						all[val]=1
+						count.push(val)
+					}
 				});
 				return text
 			}
@@ -236,20 +285,20 @@
 							$.each(OutData, function (index, value) {
 								let num = false
 								if (!isEmptyObject(value)) {
-									html += `<div class="no">${No[index]}</div> - <b>${valueId}</b><div class="clearfix"></div>`
+									html += `<div class="no">${No[index]}<b> - ${valueId}</b></div><div class="clearfix"></div>`
 									$.each(value, function (index2, value2) {
 										if (value2.includes(two)) {
 											num = true
 											html += `<div class="tr">
 										    	<div class="key">${Key[index2]}</div>
-										    	<div class="num badge  badge-xs bg-primary">${two}</div>
+										    	<div class="num badge">${two}</div>
 										    </div>`
 										}
 										if (value2.includes(three)) {
 											num = true
 											html += `<div class="tr">
 										    	<div class="key">${Key[index2]}</div>
-										    	<div class="num badge badge-xs bg-primary">${three}</div>
+										    	<div class="num badge">${three}</div>
 										    </div>`
 										}
 									});
@@ -288,6 +337,21 @@
 			//碼掉身分證
 			$(document).on('click', '#download2', function (event) {
 				$('.no').next('b').text('***')
+			});
+
+			var userData= localStorage.getItem('active');//是否開啟仇恨值
+			if(userData==0){
+				$('#result3').addClass('active');
+			}
+			//關閉/開啟
+			$(document).on('click', '#toggle', function (event) {
+				if($('#result3').hasClass( "active" )){
+					localStorage.setItem('active',0);//關閉
+				}else{
+					localStorage.setItem('active',1);//開啟
+				}
+				$('#result3').toggleClass('active');
+
 			});
 
 		});
